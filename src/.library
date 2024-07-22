@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <library xmlns="http://www.sap.com/sap.ui.library.xsd">
-	<name>io.pragmatiqu</name>
+	<name>io.pragmatiqu.charts</name>
 	<vendor>Michael Gerzabek</vendor>
 	<version>${version}</version>
 	<copyright>${copyright}</copyright>
-	<title>io.pragmatiqu</title>
-	<documentation>Some description about io.pragmatiqu</documentation>
+	<title>io.pragmatiqu.charts</title>
+	<documentation>Some description about io.pragmatiqu.charts</documentation>
 	<dependencies>
 		<dependency>
 			<libraryName>sap.ui.core</libraryName>

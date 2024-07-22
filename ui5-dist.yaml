@@ -5,8 +5,8 @@ type: library
 resources:
   configuration:
     paths:
-      src: dist/resources/io/pragmatiqu/
-      test: dist/test-resources/io/pragmatiqu/
+      src: dist/resources/io/pragmatiqu/charts/
+      test: dist/test-resources/io/pragmatiqu/charts/
 framework:
   name: OpenUI5
   version: 1.126.1

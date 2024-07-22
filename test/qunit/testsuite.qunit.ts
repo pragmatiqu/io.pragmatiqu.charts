@@ -1,9 +1,9 @@
 export default {
-	name: "QUnit TestSuite for io.pragmatiqu",
+	name: "QUnit TestSuite for io.pragmatiqu.charts",
 	defaults: {
 		bootCore: true,
 		ui5: {
-			libs: "sap.ui.core,io.pragmatiqu",
+			libs: "sap.ui.core,io.pragmatiqu.charts",
 			theme: "sap_horizon",
 			noConflict: true,
 			preload: "auto"
@@ -23,7 +23,7 @@ export default {
 		// test file for the Example control
 		Example: {
 			title: "QUnit Test for Example",
-			_alternativeTitle: "QUnit tests: io.pragmatiqu.Example"
+			_alternativeTitle: "QUnit tests: io.pragmatiqu.charts.Example"
 		}
 	}
 };

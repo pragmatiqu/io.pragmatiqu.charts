@@ -2,20 +2,28 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Test Page for io.pragmatiqu.Example</title>
+		<title>Test Page for io.pragmatiqu.charts.Example</title>
 		<base href="../../../" />
 		<script
-			src="resources/sap-ui-core.js"
+			src="/resources/sap-ui-core.js"
 			id="sap-ui-bootstrap"
 			data-sap-ui-async="true"
 			data-sap-ui-oninit="module:local/Example"
-			data-sap-ui-libs="sap.ui.core,io.pragmatiqu"
+			data-sap-ui-libs="sap.ui.core,io.pragmatiqu.charts"
 			data-sap-ui-theme="sap_horizon"
-			data-sap-ui-resourceroots='{"local" : "./test-resources/io/pragmatiqu/"}'
+			data-sap-ui-resourceroots='{"local" : "./io/pragmatiqu/charts/"}'
 		></script>
+		<style>
+			html, body {
+				height: 100%
+			}
+			div#content {
+				height: 100%
+			}
+		</style>
 	</head>
 	<body class="sapUiBody">
-		<h1 id="header">Test Page for <code>io.pragmatiqu.Example</code></h1>
+		<h1 id="header">Charts Test Page</h1>
 		<div id="content"></div>
 	</body>
 </html>
