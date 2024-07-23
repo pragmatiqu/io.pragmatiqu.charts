@@ -68,7 +68,7 @@ export default class EmployeeStatusChart extends Control {
 	};
 
 	public onAfterRendering(e: jQuery.Event): void {
-		const thresholds = [0, 25, 50, 75, 100]; // thresholds fix
+		const thresholds = [0, 25, 50, 75, 100, 125, 150]; // thresholds fix
 		const colors = {
 			green: "#157804",
 			yellow: "#f2d707",
@@ -80,35 +80,30 @@ export default class EmployeeStatusChart extends Control {
 			red: "#f7ccc3"
 		}
 
-		const sizeX = 400;
-		const sizeY = 20;
+		const width = 400;
+		const height = 20;
 
 		const barHeight = 12;
 
-		// Dimensions
-		const margin = { top: 0, right: 0, bottom: 0, left: 0 },
-			width = sizeX - margin.left - margin.right,
-			height = sizeY - margin.top - margin.bottom;
-
 		// Create the SVG container.
 		const svg = d3.select("#" + this.getId());
-		svg.attr("viewBox", `0 0 ${sizeX} ${sizeY}`)
+		svg.attr("viewBox", `0 0 ${width} ${height}`)
 			.attr("preserveAspectRatio", "xMidYMid meet");
 		if (0 === this.getBudgeted()) {
 			svg.append("text")
 				.attr("x", 2)
-				.attr("y", 17)
+				.attr("y", 15)
 				.attr("text-anchor", "start")
 				.text("Für diesen Mitarbeiter wurde kein Budget eröffnet")
-				.style("font-size", "10px") // Set font size
+				.style("font-size", "9px") // Set font size
 				.style("font-weight", "400")
-				.style("font-family", "Arial"); // Set font family
+				.style("font-family", "72"); // Set font family
 			return;
 		}
 
 		// Scales, immer 0-150, weil wir prozentuell anzeigen und Budgets
 		// überschritten werden können
-		const xScale = d3.scaleLinear([0, 100], [0, width]);
+		const xScale = d3.scaleLinear([0, 150], [0, width]);
 
 		// Calculate the position of hours worked on the timeline for each worker
 		const hoursToTime = d3.scaleLinear()
@@ -127,11 +122,11 @@ export default class EmployeeStatusChart extends Control {
 			background = backgrounds.yellow;
 		}
 
-		// Add the bar showing hours worked
+		// Add the bar showing hours budgeted
 		svg.append("rect")
 			.attr("x", 0)
 			.attr("y", 0)
-			.attr("width", hoursToTime(this.getBudgeted()))
+			.attr("width", xScale(100))
 			.attr("height", height)
 			.attr("fill", background);
 
@@ -139,7 +134,7 @@ export default class EmployeeStatusChart extends Control {
 		svg.append("rect")
 			.attr("x", 0)
 			.attr("y", 4)
-			.attr("width", hoursToTime(this.getPosted()))
+			.attr("width", xScale(percent))
 			.attr("height", barHeight)
 			.attr("fill", color);
 

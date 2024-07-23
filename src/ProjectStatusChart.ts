@@ -77,7 +77,7 @@ export default class ProjectStatusChart extends Control {
 	}
 
 	public onAfterRendering(e: jQuery.Event): void {
-		const thresholds = [0, 25, 50, 75, 100]; // thresholds fix
+		const thresholds = [0, 25, 50, 75, 100, 125, 150]; // thresholds fix
 		interface displayColor {
 			foreground: string,
 			background: string
@@ -101,8 +101,8 @@ export default class ProjectStatusChart extends Control {
 				background: "#f7ccc3"
 			}
 		};
-		const sizeX = 800;
-		const sizeY = 60;
+		const width = 800;
+		const height = 60;
 
 		const orderedValue = this.getOrdered();
 		const postedValue = this.getPosted();
@@ -134,59 +134,54 @@ export default class ProjectStatusChart extends Control {
 		const backgroundColor = colors[color as keyof displayColors].background;
 		const foregroundColor = colors[color as keyof displayColors].foreground;
 
-		const margin = {top: 20, right: 10, bottom: 20, left: 10};
-		const width = sizeX - margin.left - margin.right;
-		const height = sizeY - margin.top - margin.bottom;
-
 		// Create the SVG container.
 		const svg = d3.select("#" + this.getId());
-		svg.attr("viewBox", `0 0 ${sizeX} ${sizeY}`)
+		svg.attr("viewBox", `0 0 ${width} ${height}`)
 			.attr("preserveAspectRatio", "xMidYMid meet");
-
-		const g = svg.append("g")
-			.attr("transform", `translate(${margin.left},${margin.top})`);
 
 		// Scales… immer 0-150 weil wir prozentuell anzeigen
 		const xScale = d3.scaleLinear([0, 150], [0, width]);
 
 		// Thresholds (qualitative ranges)
 		thresholds.forEach((threshold, i) => {
-			g.append("line")
+			svg.append("line")
 				.attr("x1", xScale(thresholds[i]))
 				.attr("x2", xScale(thresholds[i]))
-				.attr("y1", 0 === i % 4 ? -4 : -3)
-				.attr("y2", 0 === i % 4 ? height + 4 : height + 3)
+				.attr("y1", 0 === i % 4 ? 0 : 10)
+				.attr("y2", 0 === i % 4 ? height : height - 10)
 				.attr("stroke", "black")
 				.attr("stroke-width", 0 === i % 4 ? 2 : 1);
 		});
 
 		// estimatedValue
-		g.append("rect")
+		svg.append("rect")
 			.attr("x", 1)
+			.attr("y", 15)
 			.attr("width", xScale(estimated))
-			.attr("height", height)
+			.attr("height", height - 30)
 			.attr("fill", backgroundColor); // grün # bee8b7 gelb #f7f1c3 rot #f7ccc3
 
 		// estimatedValue ergänzt um Sicherheitsaufschlag = Auftragssumme
-		g.append("rect")
+		svg.append("rect")
 			.attr("x", xScale(estimated))
+			.attr("y", 15)
 			.attr("width", xScale(100 - estimated) - 1)
-			.attr("height", height)
+			.attr("height", height - 30)
 			.attr("fill", "#eef");
 
 		// postedValue
-		g.append("rect")
+		svg.append("rect")
 			.attr("x", 1)
-			.attr("y", 4)
+			.attr("y", 20)
 			.attr("width", xScale(Math.min(posted, 140)))
-			.attr("height", height - 8)
+			.attr("height", height - 40)
 			.attr("fill", foregroundColor);
 		// grün solange postedValue <= alertingThreshold
 		// gelb solange alertingThreshold < postedValue <= orderedValue
 		// rot sobald postedValue > orderedValue
 
 		// Target value (comparative marker)
-		g.append("line")
+		svg.append("line")
 			.attr("x1", xScale(threshold))
 			.attr("x2", xScale(threshold))
 			.attr("y1", -8)
@@ -195,10 +190,11 @@ export default class ProjectStatusChart extends Control {
 			.attr("stroke-width", 3);
 
 		if (0 < settled) { // abgerechnetes Budget -------------------
-			g.append("rect")
+			svg.append("rect")
 				.attr("x", 0)
+				.attr("y", 15)
 				.attr("width", xScale(settled))
-				.attr("height", height)
+				.attr("height", height - 30)
 				.attr("fill", "#3236a8");
 
 			let settleX = xScale(settled) / 2;
@@ -207,7 +203,7 @@ export default class ProjectStatusChart extends Control {
 				settleX = 3;
 				settleA = "start";
 			}
-			g.append("text")
+			svg.append("text")
 				.attr("x", settleX) // Center the text in the rectangle
 				.attr("y", (height / 2) + 1) // Vertically center
 				.attr("text-anchor", settleA) // Ensure the text is centered
@@ -220,18 +216,18 @@ export default class ProjectStatusChart extends Control {
 		} // ende abgerechnetes Budget -------------------
 
 		// Labels
-		g.append("text")
+		svg.append("text")
 			.attr("x", xScale(Math.min(posted, 140)))
-			.attr("y", height + margin.bottom / 2 + 2)
+			.attr("y", height)
 			.attr("text-anchor", posted > 25 ? "end" : "start")
 			.text(postedValueText)
 			.style("font-size", "10px") // Set font size
 			.style("font-weight", "600")
 			.style("font-family", "Arial"); // Set font family
 
-		g.append("text")
-			.attr("x", xScale(ordered))
-			.attr("y", 0 - margin.top / 2 + 4)
+		svg.append("text")
+			.attr("x", xScale(ordered) - 2)
+			.attr("y", 10)
 			.attr("text-anchor", "end")
 			.text(orderedValueText)
 			.style("font-size", "10px") // Set font size

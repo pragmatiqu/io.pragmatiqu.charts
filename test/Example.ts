@@ -21,14 +21,10 @@ sap.ui.loader.config({
 
 import EmployeeStatusChart from "io/pragmatiqu/charts/EmployeeStatusChart";
 import ProjectStatusChart from "io/pragmatiqu/charts/ProjectStatusChart";
+import Page from "sap/m/Page";
 
 // create a new instance of the Example control and
 // place it into the DOM element with the id "content"
-/*
-new Chart({
-	text: "Test"
-}).placeAt("content");
-*/
 /*
 new ProjectStatusChart("chart", {
 	ordered: 16750,
@@ -37,6 +33,7 @@ new ProjectStatusChart("chart", {
 }).placeAt("content");
 */
 new EmployeeStatusChart("employee", {
-	budgeted: 0,
+	budgeted: 9450,
 	posted: 4531.25,
 }).placeAt("content");
+
