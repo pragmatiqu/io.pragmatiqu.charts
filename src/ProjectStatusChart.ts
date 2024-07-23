@@ -5,9 +5,10 @@ import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
 import RenderManager from "sap/ui/core/RenderManager";
 import * as d3 from "d3";
+import Log from "sap/base/Log";
 
 /**
- * Constructor for a new <code>io.pragmatiqu.Example</code> control.
+ * Constructor for a new <code>io.pragmatiqu.charts.ProjectStatusChart</code> control.
  *
  * Some class description goes here.
  * @extends Control
@@ -17,13 +18,13 @@ import * as d3 from "d3";
  *
  * @constructor
  * @public
- * @name io.pragmatiqu.charts.BarChart
+ * @name io.pragmatiqu.charts.ProjectStatusChart
  */
-export default class BarChart extends Control {
+export default class ProjectStatusChart extends Control {
 	// The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
-	constructor(id?: string | $BarChartSettings);
-	constructor(id?: string, settings?: $BarChartSettings);
-	constructor(id?: string, settings?: $BarChartSettings) {
+	constructor(id?: string | $ProjectStatusChartSettings);
+	constructor(id?: string, settings?: $ProjectStatusChartSettings);
+	constructor(id?: string, settings?: $ProjectStatusChartSettings) {
 		super(id, settings);
 	}
 
@@ -33,8 +34,8 @@ export default class BarChart extends Control {
 			/**
 			 * The ordered value to display.
 			 */
-			orderedTxt: {
-				type: "string",
+			ordered: {
+				type: "float",
 				group: "Data",
 				defaultValue: "NaN"
 			},
@@ -47,49 +48,33 @@ export default class BarChart extends Control {
 				defaultValue: 0
 			},
 			/**
-			 * The postedTxT value to display.
-			 */
-			postedTxt: {
-				type: "string",
-				group: "Data",
-				defaultValue: "NaN"
-			},
-			/**
 			 * The settled value to display.
 			 */
 			settled: {
 				type: "float",
 				group: "Data",
 				defaultValue: 0
-			},
-			/**
-			 * The settledTxt value to display.
-			 */
-			settledTxt: {
-				type: "string",
-				group: "Data",
-				defaultValue: "NaN"
-			},
-			/**
-			 * The color value to display.
-			 */
-			color: {
-				type: "string",
-				group: "Data",
-				defaultValue: "green"
 			}
 		}
 	};
 
 	static renderer = {
 		apiVersion: 2,
-		render: function (rm: RenderManager, control: BarChart): void {
+		render: function (rm: RenderManager, control: ProjectStatusChart): void {
 			rm.openStart("svg", control);
 			rm.attr("id", control.getId());
 			rm.openEnd();
 			rm.close("svg");
 		}
 	};
+
+	private currency(n: float): string {
+		return new Intl.NumberFormat('de-DE', {
+			style: 'currency',
+			currency: 'EUR',
+			currencyDisplay: 'code'
+		}).format(n);
+	}
 
 	public onAfterRendering(e: jQuery.Event): void {
 		const thresholds = [0, 25, 50, 75, 100]; // thresholds fix
@@ -118,18 +103,36 @@ export default class BarChart extends Control {
 		};
 		const sizeX = 800;
 		const sizeY = 60;
-		const alertingThreshold = 80;
-		const estimatedValue = 90;
-		const orderedValue = 100;
 
-		const orderedValueText = this.getOrderedTxt();
+		const orderedValue = this.getOrdered();
 		const postedValue = this.getPosted();
-		const postedValueText = this.getPostedTxt();
 		const settledValue = this.getSettled();
-		const settledValueText = this.getSettledTxt();
 
-		const backgroundColor = colors[this.getColor() as keyof displayColors].background;
-		const foregroundColor = colors[this.getColor() as keyof displayColors].foreground;
+		const orderedValueText = this.currency(orderedValue);
+		const postedValueText = this.currency(postedValue);
+		const settledValueText = this.currency(settledValue);
+
+		const threshold = 80;
+		const estimated = 90;
+		const ordered = 100;
+
+		if (0 === orderedValue) {
+			Log.error("Cannot create chart when ordered value is zero! Aborting…");
+			return;
+		}
+
+		const settled = (settledValue*100)/orderedValue;
+		const posted = (postedValue*100)/orderedValue;
+
+		let color = 'yellow';
+		if (80 > posted) {
+			color = 'green';
+		}
+		if (90 < posted) {
+			color = 'red';
+		}
+		const backgroundColor = colors[color as keyof displayColors].background;
+		const foregroundColor = colors[color as keyof displayColors].foreground;
 
 		const margin = {top: 20, right: 10, bottom: 20, left: 10};
 		const width = sizeX - margin.left - margin.right;
@@ -160,14 +163,14 @@ export default class BarChart extends Control {
 		// estimatedValue
 		g.append("rect")
 			.attr("x", 1)
-			.attr("width", xScale(estimatedValue))
+			.attr("width", xScale(estimated))
 			.attr("height", height)
 			.attr("fill", backgroundColor); // grün # bee8b7 gelb #f7f1c3 rot #f7ccc3
 
 		// estimatedValue ergänzt um Sicherheitsaufschlag = Auftragssumme
 		g.append("rect")
-			.attr("x", xScale(estimatedValue))
-			.attr("width", xScale(100 - estimatedValue) - 1)
+			.attr("x", xScale(estimated))
+			.attr("width", xScale(100 - estimated) - 1)
 			.attr("height", height)
 			.attr("fill", "#eef");
 
@@ -175,7 +178,7 @@ export default class BarChart extends Control {
 		g.append("rect")
 			.attr("x", 1)
 			.attr("y", 4)
-			.attr("width", xScale(Math.min(postedValue, 140)))
+			.attr("width", xScale(Math.min(posted, 140)))
 			.attr("height", height - 8)
 			.attr("fill", foregroundColor);
 		// grün solange postedValue <= alertingThreshold
@@ -184,47 +187,53 @@ export default class BarChart extends Control {
 
 		// Target value (comparative marker)
 		g.append("line")
-			.attr("x1", xScale(alertingThreshold))
-			.attr("x2", xScale(alertingThreshold))
+			.attr("x1", xScale(threshold))
+			.attr("x2", xScale(threshold))
 			.attr("y1", -8)
 			.attr("y2", height + 8)
 			.attr("stroke", "#fc0303")
 			.attr("stroke-width", 3);
 
-		if (0 < settledValue) { // abgerechnetes Budget -------------------
+		if (0 < settled) { // abgerechnetes Budget -------------------
 			g.append("rect")
 				.attr("x", 0)
-				.attr("width", xScale(settledValue))
+				.attr("width", xScale(settled))
 				.attr("height", height)
 				.attr("fill", "#3236a8");
 
+			let settleX = xScale(settled) / 2;
+			let settleA = "middle";
+			if (50 > settled) {
+				settleX = 3;
+				settleA = "start";
+			}
 			g.append("text")
-				.attr("x", xScale(settledValue) / 2) // Center the text in the rectangle
-				.attr("y", (height / 2) + 2) // Vertically center
-				.attr("text-anchor", "middle") // Ensure the text is centered
+				.attr("x", settleX) // Center the text in the rectangle
+				.attr("y", (height / 2) + 1) // Vertically center
+				.attr("text-anchor", settleA) // Ensure the text is centered
 				.attr("dominant-baseline", "middle") // Center text vertically
-				.text(`${settledValueText} EUR`)
+				.text(settledValueText)
 				.style("fill", "white")
 				.style("font-weight", "600")
-				.style("font-size", "12px")
+				.style("font-size", "10px")
 				.style("font-family", "Arial");
 		} // ende abgerechnetes Budget -------------------
 
 		// Labels
 		g.append("text")
-			.attr("x", xScale(Math.min(postedValue, 140)))
+			.attr("x", xScale(Math.min(posted, 140)))
 			.attr("y", height + margin.bottom / 2 + 2)
-			.attr("text-anchor", postedValue > 25 ? "end" : "start")
-			.text(`${postedValueText} EUR`)
+			.attr("text-anchor", posted > 25 ? "end" : "start")
+			.text(postedValueText)
 			.style("font-size", "10px") // Set font size
 			.style("font-weight", "600")
 			.style("font-family", "Arial"); // Set font family
 
 		g.append("text")
-			.attr("x", xScale(orderedValue))
+			.attr("x", xScale(ordered))
 			.attr("y", 0 - margin.top / 2 + 4)
 			.attr("text-anchor", "end")
-			.text(`${orderedValueText} EUR`)
+			.text(orderedValueText)
 			.style("font-size", "10px") // Set font size
 			.style("font-weight", "400")
 			.style("font-family", "Arial");

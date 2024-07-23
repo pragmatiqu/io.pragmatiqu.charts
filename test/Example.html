@@ -13,6 +13,15 @@
 			data-sap-ui-theme="sap_horizon"
 			data-sap-ui-resourceroots='{"local" : "./io/pragmatiqu/charts/"}'
 		></script>
+		<script>
+			sap.ui.loader.config({
+				map: {
+					"*": {
+						"d3": null
+					}
+				}
+			});
+		</script>
 		<style>
 			html, body {
 				height: 100%

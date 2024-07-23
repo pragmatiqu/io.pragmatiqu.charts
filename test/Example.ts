@@ -20,7 +20,7 @@ sap.ui.loader.config({
 */
 
 import Chart from "io/pragmatiqu/charts/Chart";
-import BarChart from "io/pragmatiqu/charts/BarChart";
+import ProjectStatusChart from "io/pragmatiqu/charts/ProjectStatusChart";
 
 // create a new instance of the Example control and
 // place it into the DOM element with the id "content"
@@ -29,11 +29,8 @@ new Chart({
 	text: "Test"
 }).placeAt("content");
 */
-new BarChart("chart", {
-	orderedTxt: "16.750,00",
-	posted: 25.9,
-	postedTxt: "4.531,25",
-	settled: 10,
-	settledTxt: "1.675,00",
-	color: "green"
+new ProjectStatusChart("chart", {
+	ordered: 16750,
+	posted: 4531.25,
+	settled: 1675
 }).placeAt("content");

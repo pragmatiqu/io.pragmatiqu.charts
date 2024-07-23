@@ -35,7 +35,7 @@
 		"@types/d3": "^7.4.3",
 		"@typescript-eslint/eslint-plugin": "^7.14.1",
 		"@typescript-eslint/parser": "^7.14.1",
-		"@ui5/cli": "^3.11.0",
+		"@ui5/cli": "^3.11.1",
 		"@ui5/ts-interface-generator": "^0.8.3",
 		"eslint": "^8.57.0",
 		"karma": "^6.4.3",
@@ -50,7 +50,7 @@
 		"ui5-tooling-modules": "^3.8.0",
 		"ui5-tooling-transpile": "^3.4.5"
 	},
-  "dependencies": {
+	"dependencies": {
 		"d3": "^7.9.0"
-  }
+	}
 }
