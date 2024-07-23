@@ -1,7 +1,7 @@
 import { PropertyBindingInfo } from "sap/ui/base/ManagedObject";
 import { $ControlSettings } from "sap/ui/core/Control";
 
-declare module "./Chart" {
+declare module "./EmployeeStatusChart" {
 
     /**
      * Interface defining the settings object used in constructor calls

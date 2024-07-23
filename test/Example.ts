@@ -19,7 +19,7 @@ sap.ui.loader.config({
 });
 */
 
-import Chart from "io/pragmatiqu/charts/Chart";
+import EmployeeStatusChart from "io/pragmatiqu/charts/EmployeeStatusChart";
 import ProjectStatusChart from "io/pragmatiqu/charts/ProjectStatusChart";
 
 // create a new instance of the Example control and
@@ -29,8 +29,14 @@ new Chart({
 	text: "Test"
 }).placeAt("content");
 */
+/*
 new ProjectStatusChart("chart", {
 	ordered: 16750,
 	posted: 4531.25,
 	settled: 1675
+}).placeAt("content");
+*/
+new EmployeeStatusChart("employee", {
+	budgeted: 0,
+	posted: 4531.25,
 }).placeAt("content");

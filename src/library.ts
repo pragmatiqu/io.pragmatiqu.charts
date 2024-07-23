@@ -22,7 +22,7 @@ const thisLib: { [key: string]: unknown } = Lib.init({
 	types: [],
 	interfaces: [],
 	controls: [
-		"io.pragmatiqu.charts.Chart",
+		"io.pragmatiqu.charts.EmployeeStatusChart",
 		"io.pragmatiqu.charts.ProjectStatusChart",
 	],
 	elements: [],

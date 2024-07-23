@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import Chart from "io/pragmatiqu/charts/Chart";
+import EmployeeStatusChart from "io/pragmatiqu/charts/EmployeeStatusChart";
 
 // prepare DOM
 const elem = document.createElement("div");
@@ -30,16 +30,8 @@ QUnit.module("Basic Control Checks");
 // some basic control checks
 QUnit.test("Test get properties", function (assert) {
 	assert.expect(2);
-	const oExample = new Chart({
+	const oExample = new EmployeeStatusChart({
 		text: "Example"
 	});
 	assert.equal(oExample.getText(), "Example", "Check text equals 'Example'");
-});
-
-// some basic eventing check
-QUnit.test("Test click event", function (assert) {
-	assert.expect(1);
-	const oExample = new Chart("example", {
-		text: "Example"
-	}).placeAt("uiArea1");
 });
