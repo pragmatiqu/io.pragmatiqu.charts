@@ -77,7 +77,3 @@ npm run lint
 ## License
 
 This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
-
----
-
-###### This template is provided to you by Wouter Lemaire and contributors :wink:
