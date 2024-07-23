@@ -1,3 +1,9 @@
+/**
+ * Also tried to overwrite the loader config, but not sure how to do this…
+ * https://stackoverflow.com/questions/76970400/how-to-avoid-own-d3-library-being-overwritten-when-loading-other-flp-apps
+ * https://stackoverflow.com/questions/75168281/jspdf-error-autotable-is-not-a-function-in-sap-ui5/75177939#75177939
+ */
+/*
 sap.ui.loader.config({
 	async: true,
 	paths: {
@@ -11,6 +17,7 @@ sap.ui.loader.config({
 		}
 	}
 });
+*/
 
 import Chart from "io/pragmatiqu/charts/Chart";
 import BarChart from "io/pragmatiqu/charts/BarChart";
