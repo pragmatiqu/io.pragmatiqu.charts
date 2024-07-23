@@ -23,7 +23,7 @@ const thisLib: { [key: string]: unknown } = Lib.init({
 	interfaces: [],
 	controls: [
 		"io.pragmatiqu.charts.Chart",
-		"io.pragmatiqu.charts.BarChart",
+		"io.pragmatiqu.charts.ProjectStatusChart",
 	],
 	elements: [],
 	noLibraryCSS: true // if no CSS is provided, you can disable the library.css load here
