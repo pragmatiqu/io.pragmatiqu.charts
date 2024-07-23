@@ -1,6 +1,6 @@
 {
-	"name": "io.pragmatiqu.charts",
-	"version": "1.0.0",
+	"name": "@pragmatiqu/charts",
+	"version": "0.0.1",
 	"description": "UI5 Charts Library",
 	"author": "Michael Gerzabek",
 	"license": "Apache-2.0",
