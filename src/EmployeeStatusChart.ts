@@ -121,6 +121,10 @@ export default class EmployeeStatusChart extends Control {
 			color = colors.yellow;
 			background = backgrounds.yellow;
 		}
+		if ( percent > 100) {
+			color = colors.red;
+			background = backgrounds.red;
+		}
 
 		// Add the bar showing hours budgeted
 		svg.append("rect")
