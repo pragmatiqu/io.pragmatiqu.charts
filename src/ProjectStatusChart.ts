@@ -77,6 +77,11 @@ export default class ProjectStatusChart extends Control {
 	}
 
 	public onAfterRendering(e: jQuery.Event): void {
+		const formatter = new Intl.NumberFormat('de-DE', {
+			style: 'currency',
+			currency: 'EUR',
+			currencyDisplay: 'code'
+		});
 		const thresholds = [0, 25, 50, 75, 100, 125, 150]; // thresholds fix
 		interface displayColor {
 			foreground: string,
@@ -108,9 +113,9 @@ export default class ProjectStatusChart extends Control {
 		const postedValue = this.getPosted();
 		const settledValue = this.getSettled();
 
-		const orderedValueText = this.currency(orderedValue);
-		const postedValueText = this.currency(postedValue);
-		const settledValueText = this.currency(settledValue);
+		const orderedValueText = formatter.format(orderedValue);
+		const postedValueText = formatter.format(postedValue);
+		const settledValueText = formatter.format(settledValue);
 
 		const threshold = 80;
 		const estimated = 90;
@@ -218,7 +223,7 @@ export default class ProjectStatusChart extends Control {
 		// Labels
 		svg.append("text")
 			.attr("x", xScale(Math.min(posted, 140)))
-			.attr("y", height)
+			.attr("y", height - 2)
 			.attr("text-anchor", posted > 25 ? "end" : "start")
 			.text(postedValueText)
 			.style("font-size", "10px") // Set font size
